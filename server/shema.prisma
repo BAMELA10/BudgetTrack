@@ -1,0 +1,75 @@
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource DB {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+model User {
+    id  String  @default(uuid())
+    name    String
+    email   String
+    secret Secrets?
+    category Category[]
+    createdAt    DateTime    @defaut(now())
+    updatedAt    DateTime    @defaut(now())  
+}
+
+model Secrets {
+    id  String  @default(uuid())
+    password    String
+    lastSignedIn    DateTime
+    userId   String
+    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
+}
+
+model Category {
+    id  String  @default(uuid())
+    userId  String
+    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
+    name    String
+    color   String
+    createdAt    DateTime    @defaut(now())
+    updatedAt    DateTime    @defaut(now())  
+}
+
+enum TransType {
+    IN
+    OUT
+}
+model Transaction {
+    id  String  @default(uuid())
+    userId   String
+    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
+    categoryId  String
+    category    Category    @relation(fields:[catgoryId], references:[id], onDelete: Cascade)
+    amount  Decimal
+    type    TransType   @default(IN)
+    date    DateTime    @default(now())
+    note    String?
+    createdAt    DateTime    @defaut(now())
+    updatedAt    DateTime    @defaut(now())    
+}
+
+enum Period {
+    day
+    week
+    month
+    year
+}
+
+model Budget {
+    id  String  @default(uuid())
+    userId   String
+    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
+    categoryId  String
+    category    Category    @relation(fields:[catgoryId], references:[id], onDelete: Cascade)
+    limit_amount    Decimal
+    period_type Period      @default(month)
+    period      DateTime
+    createdAt    DateTime    @defaut(now())
+    updatedAt    DateTime    @defaut(now())
+}

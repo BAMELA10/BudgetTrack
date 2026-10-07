@@ -1,0 +1,70 @@
+{
+  "hash": "9c28c856",
+  "configHash": "42cae092",
+  "lockfileHash": "e0caa278",
+  "browserHash": "2479e405",
+  "optimized": {
+    "@angular/core": {
+      "src": "../../../../../../node_modules/@angular/core/fesm2022/core.mjs",
+      "file": "@angular_core.js",
+      "fileHash": "ca5f1238",
+      "needsInterop": false
+    },
+    "@angular/platform-browser": {
+      "src": "../../../../../../node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs",
+      "file": "@angular_platform-browser.js",
+      "fileHash": "39888032",
+      "needsInterop": false
+    },
+    "@angular/platform-server/init": {
+      "src": "../../../../../../node_modules/@angular/platform-server/fesm2022/init.mjs",
+      "file": "@angular_platform-server_init.js",
+      "fileHash": "cedc8052",
+      "needsInterop": false
+    },
+    "@angular/router": {
+      "src": "../../../../../../node_modules/@angular/router/fesm2022/router.mjs",
+      "file": "@angular_router.js",
+      "fileHash": "6bcf33cd",
+      "needsInterop": false
+    },
+    "@angular/ssr": {
+      "src": "../../../../../../node_modules/@angular/ssr/fesm2022/ssr.mjs",
+      "file": "@angular_ssr.js",
+      "fileHash": "dda050ff",
+      "needsInterop": false
+    },
+    "@angular/ssr/node": {
+      "src": "../../../../../../node_modules/@angular/ssr/fesm2022/node.mjs",
+      "file": "@angular_ssr_node.js",
+      "fileHash": "f17b0f58",
+      "needsInterop": false
+    },
+    "express": {
+      "src": "../../../../../../node_modules/express/index.js",
+      "file": "express.js",
+      "fileHash": "db48cdc6",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-4TLQIREF": {
+      "file": "chunk-4TLQIREF.js"
+    },
+    "chunk-XXPY3VRV": {
+      "file": "chunk-XXPY3VRV.js"
+    },
+    "chunk-KGVEVLJ5": {
+      "file": "chunk-KGVEVLJ5.js"
+    },
+    "chunk-7MSN64PQ": {
+      "file": "chunk-7MSN64PQ.js"
+    },
+    "xhr2-AEYRUEYV": {
+      "file": "xhr2-AEYRUEYV.js"
+    },
+    "chunk-S6STQDT5": {
+      "file": "chunk-S6STQDT5.js"
+    }
+  }
+}
