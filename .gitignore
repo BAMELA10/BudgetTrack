@@ -93,7 +93,6 @@ yarn-error.log
 
 # Miscellaneous
 client/.angular
-client/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
@@ -107,4 +106,4 @@ __screenshots__/
 Thumbs.db
 
 !.env.example
-
+server/generated/prisma

@@ -6,11 +6,15 @@ WORKDIR /app
 # Get dependencies stage
 FROM base AS deps
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+# # Étape 1 : télécharger TOUTES les dépendances dans le store (une seule fois)
+# RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+#     pnpm fetch
+# Étape 2 : reconstruire node_modules à partir du store, sans réseau
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile --prefer-offline
 
 # Stage for dev mode image
 FROM deps AS dev
-RUN pnpm add nodemon -D
 COPY . .
 EXPOSE 3000
 CMD ["pnpm", "start:dev"]

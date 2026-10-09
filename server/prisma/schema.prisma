@@ -1,39 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
-datasource DB {
-    provider = "postgresql"
-    url = env("DATABASE_URL")
+datasource db {
+  provider = "postgresql"
 }
 
 model User {
-    id  String  @default(uuid())
+    id  String  @default(uuid()) @id
     name    String
     email   String
     secret Secrets?
     category Category[]
+    transaction Transaction[]
+    buget Budget[]
     createdAt    DateTime    @default(now())
     updatedAt    DateTime    @default(now())  
 }
 
 model Secrets {
-    id  String  @default(uuid())
+    id  String  @default(uuid()) @id
     password    String
     lastSignedIn    DateTime
-    userId   String
-    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
+    userId   String @unique
+    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade) 
 }
 
 model Category {
-    id  String  @default(uuid())
+    id  String  @default(uuid()) @id
     userId  String
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     name    String
     color   String
     createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @default(now())  
+    updatedAt    DateTime    @default(now())
+    transaction Transaction[]
+    buget Budget[]
 }
 
 enum TransType {
@@ -41,7 +49,7 @@ enum TransType {
     OUT
 }
 model Transaction {
-    id  String  @default(uuid())
+    id  String  @default(uuid()) @id
     userId   String
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     categoryId  String
@@ -62,7 +70,7 @@ enum Period {
 }
 
 model Budget {
-    id  String  @default(uuid())
+    id  String  @default(uuid()) @id
     userId   String
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     categoryId  String
