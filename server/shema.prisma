@@ -14,8 +14,8 @@ model User {
     email   String
     secret Secrets?
     category Category[]
-    createdAt    DateTime    @defaut(now())
-    updatedAt    DateTime    @defaut(now())  
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @default(now())  
 }
 
 model Secrets {
@@ -32,8 +32,8 @@ model Category {
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     name    String
     color   String
-    createdAt    DateTime    @defaut(now())
-    updatedAt    DateTime    @defaut(now())  
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @default(now())  
 }
 
 enum TransType {
@@ -45,13 +45,13 @@ model Transaction {
     userId   String
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     categoryId  String
-    category    Category    @relation(fields:[catgoryId], references:[id], onDelete: Cascade)
+    category    Category    @relation(fields:[categoryId], references:[id], onDelete: Cascade)
     amount  Decimal
     type    TransType   @default(IN)
     date    DateTime    @default(now())
     note    String?
-    createdAt    DateTime    @defaut(now())
-    updatedAt    DateTime    @defaut(now())    
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @default(now())    
 }
 
 enum Period {
@@ -66,10 +66,10 @@ model Budget {
     userId   String
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     categoryId  String
-    category    Category    @relation(fields:[catgoryId], references:[id], onDelete: Cascade)
+    category    Category    @relation(fields:[categoryId], references:[id], onDelete: Cascade)
     limit_amount    Decimal
     period_type Period      @default(month)
     period      DateTime
-    createdAt    DateTime    @defaut(now())
-    updatedAt    DateTime    @defaut(now())
+    createdAt    DateTime    @default(now())
+    updatedAt    DateTime    @default(now())
 }

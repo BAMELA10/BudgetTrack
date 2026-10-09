@@ -27,7 +27,7 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": ["*"]
             },
             "ssr": {
               "entry": "src/server.ts"
@@ -67,7 +67,11 @@
               "buildTarget": "client:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig":"proxy.conf.json",
+            "allowedHosts": ["localhost", "127.0.0.1", "0.0.0.0", "server", "client"]
+          }
         },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
