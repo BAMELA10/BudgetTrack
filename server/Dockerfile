@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Get dependencies stage
 FROM base AS deps
+RUN apt-get update -y && apt-get install -y openssl
 COPY package.json pnpm-lock.yaml ./
 # # Étape 1 : télécharger TOUTES les dépendances dans le store (une seule fois)
 # RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
@@ -12,6 +13,9 @@ COPY package.json pnpm-lock.yaml ./
 # Étape 2 : reconstruire node_modules à partir du store, sans réseau
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --frozen-lockfile --prefer-offline
+COPY prisma ./prisma
+RUN pnpm prisma generate
+
 
 # Stage for dev mode image
 FROM deps AS dev
@@ -22,8 +26,7 @@ CMD ["pnpm", "start:dev"]
 FROM deps AS build
 COPY . .
 #genere les dossier dist/ necessaire pour lancer en prod
-RUN pnpm build 
-
+RUN pnpm build
 #Stage for prod mode image
 FROM base AS prod
 ENV NODE_ENV=production

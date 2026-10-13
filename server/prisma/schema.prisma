@@ -6,6 +6,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -15,7 +16,7 @@ datasource db {
 model User {
     id  String  @default(uuid()) @id
     name    String
-    email   String
+    email   String  @unique
     secret Secrets?
     category Category[]
     transaction Transaction[]
@@ -28,8 +29,9 @@ model Secrets {
     id  String  @default(uuid()) @id
     password    String
     lastSignedIn    DateTime
+    refreshToken String? @unique
     userId   String @unique
-    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade) 
+    user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
 }
 
 model Category {
