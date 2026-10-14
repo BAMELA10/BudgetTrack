@@ -1,34 +1,55 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
 import { TransactionService } from './transaction.service';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { CreateTransactionDto, UpdateTransactionDto } from '../schema';
+import { JwtGuard } from '../auth/guards/jwt/jwt.guard';
 
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
+  @UseGuards(JwtGuard)
+  async create(@Body() createTransactionDto: CreateTransactionDto) {
+    return await this.transactionService.create(createTransactionDto);
   }
 
   @Get()
-  findAll() {
-    return this.transactionService.findAll();
+  @UseGuards(JwtGuard)
+  async findAll(
+    @Query('limit') limit: number = 10,
+    @Query('page') page: number,
+  ) {
+    return await this.transactionService.findAll(limit, page);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.transactionService.findOne(+id);
+  @UseGuards(JwtGuard)
+  async findOne(@Param('id') id: string) {
+    return await this.transactionService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTransactionDto: UpdateTransactionDto) {
-    return this.transactionService.update(+id, updateTransactionDto);
+  @UseGuards(JwtGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateTransactionDto: UpdateTransactionDto,
+  ) {
+    return await this.transactionService.update(id, updateTransactionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionService.remove(+id);
+  @UseGuards(JwtGuard)
+  async remove(@Param('id') id: string) {
+    return await this.transactionService.remove(id);
   }
 }

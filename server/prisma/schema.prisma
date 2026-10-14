@@ -44,6 +44,7 @@ model Category {
     updatedAt    DateTime    @default(now())
     transaction Transaction[]
     buget Budget[]
+    isDeleted   Boolean      @default(false)
 }
 
 enum TransType {
@@ -56,12 +57,13 @@ model Transaction {
     user    User    @relation(fields:[userId], references:[id], onDelete: Cascade)
     categoryId  String
     category    Category    @relation(fields:[categoryId], references:[id], onDelete: Cascade)
-    amount  Decimal
+    amount  Float
     type    TransType   @default(IN)
     date    DateTime    @default(now())
     note    String?
     createdAt    DateTime    @default(now())
-    updatedAt    DateTime    @default(now())    
+    updatedAt    DateTime    @default(now())
+    isDeleted   Boolean      @default(false)   
 }
 
 enum Period {
@@ -82,4 +84,5 @@ model Budget {
     period      DateTime
     createdAt    DateTime    @default(now())
     updatedAt    DateTime    @default(now())
+    isDeleted   Boolean      @default(false)
 }

@@ -1,26 +1,70 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTransactionDto } from './dto/create-transaction.dto';
-import { UpdateTransactionDto } from './dto/update-transaction.dto';
-
+import {
+  CreateTransactionDto,
+  TransactionDto,
+  UpdateTransactionDto,
+} from '../schema';
+import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class TransactionService {
-  create(createTransactionDto: CreateTransactionDto) {
-    return 'This action adds a new transaction';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(
+    createTransactionDto: CreateTransactionDto,
+  ): Promise<TransactionDto> {
+    return await this.prisma.transaction.create({
+      data: createTransactionDto,
+      omit: { isDeleted: true },
+    });
   }
 
-  findAll() {
-    return `This action returns all transaction`;
+  async findAll(
+    limit: number,
+    page?: number,
+  ): Promise<{ totalPages: number; data: TransactionDto[]; page: number }> {
+    if (!page) {
+      const transactions = await this.prisma.transaction.findMany({
+        omit: { isDeleted: true },
+      });
+      return { totalPages: 1, data: transactions, page: 1 };
+    }
+    const safeLimit = Math.max(1, Math.min(limit, 100));
+    const safePage = Math.max(1, page ?? 1);
+
+    const count = await this.prisma.transaction.count();
+    const pages = Math.ceil(count / safeLimit); //total de page
+    const skip = safeLimit * (safePage - 1);
+    const transactions = await this.prisma.transaction.findMany({
+      skip,
+      take: safeLimit,
+      omit: { isDeleted: true },
+    });
+    return { totalPages: pages, data: transactions, page: safePage };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+  async findOne(id: string): Promise<TransactionDto> {
+    return await this.prisma.transaction.findUniqueOrThrow({
+      where: { id },
+      omit: { isDeleted: true },
+    });
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+  async update(
+    id: string,
+    updateTransactionDto: UpdateTransactionDto,
+  ): Promise<TransactionDto> {
+    return await this.prisma.transaction.update({
+      where: { id },
+      data: updateTransactionDto,
+      omit: { isDeleted: true },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(id: string) {
+    return await this.prisma.transaction.update({
+      where: { id },
+      data: { isDeleted: true },
+      omit: { isDeleted: true },
+    });
   }
 }

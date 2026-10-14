@@ -1,26 +1,60 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../schema';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CategoryService {
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createCategoryDto: CreateCategoryDto): Promise<CategoryDto> {
+    return await this.prisma.category.create({
+      data: createCategoryDto,
+    });
   }
 
-  findAll() {
-    return `This action returns all category`;
+  async findAll(
+    limit: number,
+    page?: number,
+  ): Promise<{ totalPages: number; data: CategoryDto[]; page: number }> {
+    if (!page) {
+      const categories = await this.prisma.category.findMany({
+        where: { isDeleted: false },
+      });
+      return { totalPages: 1, data: categories, page: 1 };
+    }
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.max(1, Math.min(limit, 100));
+    const count = await this.prisma.category.count();
+    const pages = Math.ceil(count / safePage);
+    const skip = safeLimit * (safePage - 1);
+
+    const categories = await this.prisma.category.findMany({
+      where: { isDeleted: false },
+      skip,
+      take: safeLimit,
+    });
+
+    return { totalPages: pages, data: categories, page: safePage };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string): Promise<CategoryDto> {
+    return await this.prisma.category.findFirstOrThrow({ where: { id } });
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(
+    id: string,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<CategoryDto> {
+    return await this.prisma.category.update({
+      where: { id },
+      data: updateCategoryDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    return await this.prisma.category.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
   }
 }
